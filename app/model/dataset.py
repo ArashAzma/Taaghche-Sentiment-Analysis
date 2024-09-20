@@ -3,7 +3,7 @@ from preprocess import preprocess
 from sklearn.utils import resample
 from torch.utils.data import Dataset
 
-df = pd.read_csv('app/taghche.csv', encoding='utf-8')
+df = pd.read_csv('app/model/taghche.csv', encoding='utf-8')
 
 df.dropna(inplace=True)
 

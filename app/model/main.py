@@ -17,7 +17,7 @@ fcl_hidden = 64
 model = RNN(vocab_size, num_embd, rnn_hidden, fcl_hidden)
 model.load_state_dict(torch.load(f'{BASE_DIR}/model_taghche-{__version__}.pth', weights_only=True))
 
-def predict(text):
+def predict_pipeline(text):
     model.eval()
     text = preprocess(text)
     length = len(text)

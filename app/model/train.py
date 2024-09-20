@@ -17,7 +17,7 @@ lr = 3e-3
 model = RNN(vocab_size, num_embd, rnn_hidden, fcl_hidden)
 model = model.to(device)
 
-model.load_state_dict(torch.load('app/model_taghche-0.1.0.pth'))
+model.load_state_dict(torch.load('app/model/model_taghche-0.1.0.pth'))
 
 optim  = AdamW(model.parameters(), lr=lr)
 scheduler = ReduceLROnPlateau(optim, mode='min', factor=0.1, patience=5, verbose=True)
