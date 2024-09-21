@@ -1,6 +1,7 @@
 # Taaghche-Sentiment-Analysis
 
 This project implements a sentiment analysis model for Persian book reviews using PyTorch and the HuggingFace Transformers library. The model is trained on a dataset of book reviews from Taghche, a Persian e-book platform.
+I added implemented a 🐋 dockerfile for building a image.
 
 ![alt text](image.png)
 
@@ -16,6 +17,8 @@ This project implements a sentiment analysis model for Persian book reviews usin
   - [Training](#training)
   - [Results](#results)
   - [Usage](#usage)
+  - [🐋 Docker Setup Guide for Taaghche Sentiment Analysis](#-docker-setup-guide-for-taaghche-sentiment-analysis)
+    - [1. Building the Docker Image](#1-building-the-docker-image)
   - [Acknowledgments](#acknowledgments)
 
 ## Overview
@@ -137,6 +140,27 @@ print(f"Predicted sentiment: {sentiment}")
 | خیلی قشنگ بود بنظر کتاب خوبی میومد                           | خیل قشنگ بوداست بنظر کتاب خوب میومد                    | Positive  |
 | افتضاح وقتتون رو تلف نکنید                                   | افتضاح وقتتون رو تلف کردکن                             | Negative  |
 | فکر زیبا کتاب بود. مخصوصا صدای احمد شاملو زیبا کتاب رو میکنه | فکر زیبا کتاب مخصوصا صدا احمد شاملو زیبا کتاب رو میکنه | Positive  |
+
+---
+## 🐋 Docker Setup Guide for Taaghche Sentiment Analysis
+
+### 1. Building the Docker Image
+
+First, clone the repository if you haven’t done so:
+
+```bash
+git clone https://github.com/your-username/Taaghche-Sentiment-Analysis.git
+cd Taaghche-Sentiment-Analysis
+```
+To build the Docker image, run:
+
+```bash
+docker build -t taagche-sentiment .
+```
+open http://localhost:8001 to see the Site and UI
+
+![alt text](image-1.png)
+
 
 ## Acknowledgments
 - **Hazm Library**: Persian text processing tools.
