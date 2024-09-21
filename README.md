@@ -155,8 +155,15 @@ cd Taaghche-Sentiment-Analysis
 To build the Docker image, run:
 
 ```bash
-docker build -t taagche-sentiment .
+docker build -t taaghche-sentiment .
 ```
+
+then run
+
+```bash
+docker run -p 8001:80 taaghche-sentiment
+```
+
 open http://localhost:8001 to see the Site and UI
 
 ![alt text](image-1.png)
