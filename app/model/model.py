@@ -4,9 +4,10 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
 from torch.nn.utils.rnn import pad_sequence
-
 from transformers import AutoTokenizer
-from dataset import SentimentDataset
+
+from app.model.dataset import SentimentDataset
+
 
 dataset = SentimentDataset()
 

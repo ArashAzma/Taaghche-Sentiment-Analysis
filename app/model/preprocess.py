@@ -1,11 +1,13 @@
 import re
 from hazm import *
+import os
 
 stopword_files = ['verbal.txt', 'nonverbal.txt', 'chars.txt']
 stopwords = []
 
 for file in stopword_files:
-    with open('stopwords\\' + file, encoding='utf-8') as f:
+    stopword_path = os.path.join('app/stopwords', file)
+    with open(stopword_path, encoding='utf-8') as f:
         stopwords += f.read().split('\n')
 
 stopwords = set(stopwords)
@@ -20,9 +22,7 @@ def normal(text):
     text = normalizer.normalize(text)
     return text
 
-lemmatizer = Lemmatizer()
-    
-normalizer = Normalizer(correct_spacing=True, remove_diacritics=True, remove_specials_chars=True, unicodes_replacement=True)
+# normalizer = Normalizer(correct_spacing=True, remove_diacritics=True, remove_specials_chars=True, unicodes_replacement=True)
 lemmatizer = Lemmatizer()
 stemmer = Stemmer()
 
@@ -117,7 +117,7 @@ def stemmer_text(text):
     return ' '.join(words)
 
 def normalizer_text(text):
-    text = normalizer.normalize(text)
+    text = normal(text)
     text = stemmer_text(text)
     text = lemmatizer_text(text)
     return text
@@ -143,3 +143,5 @@ def preprocess(text):
     text = remove_halfspace(text) 
     text = remove_stopwords(text)
     return text
+
+preprocess('سلام')

@@ -1,7 +1,8 @@
 import pandas as pd
-from preprocess import preprocess
 from sklearn.utils import resample
 from torch.utils.data import Dataset
+
+from app.model.preprocess import preprocess
 
 df = pd.read_csv('app/model/taghche.csv', encoding='utf-8')
 

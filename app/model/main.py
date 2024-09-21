@@ -1,8 +1,10 @@
 import torch
 from pathlib import Path
-from model import RNN, text_pipeline
-from preprocess import preprocess
 import warnings
+from torch.utils.data import DataLoader
+
+from app.model.model import RNN, collate_fn
+from app.model.preprocess import preprocess
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 __version__ = "0.1.0"
@@ -14,19 +16,25 @@ num_embd = 256
 rnn_hidden = 128
 fcl_hidden = 64
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 model = RNN(vocab_size, num_embd, rnn_hidden, fcl_hidden)
-model.load_state_dict(torch.load(f'{BASE_DIR}/model_taghche-{__version__}.pth', weights_only=True))
+# model.load_state_dict(torch.load(f'{BASE_DIR}/model_taghche-{__version__}.pth', weights_only=True))
+model.load_state_dict(torch.load(f'{BASE_DIR}/model_taghche-{__version__}.pth', map_location=torch.device('cpu')))
+
+model = model.to(device)
 
 def predict_pipeline(text):
-    model.eval()
     text = preprocess(text)
-    length = len(text)
     
-    transformed = text_pipeline(text)
-    transformed = torch.tensor(transformed).unsqueeze(0)
-    length = torch.tensor(length).unsqueeze(0)
+    usage_loader = DataLoader([[text, 1]], batch_size=1, collate_fn=collate_fn)
+
+    text, label, lenghts = next(iter(usage_loader))
     
+    model.eval()
+    text = text.to(device)
+    lenghts = lenghts.to(device)
     with torch.no_grad():
-        pred = model(transformed, length)
+        pred = model(text, lenghts)
     
     return pred.view(-1)

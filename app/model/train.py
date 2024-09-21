@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-
-from model import RNN, train_dl, test_dl, valid_dl 
 from tqdm import tqdm
+
+from app.model.model import RNN, train_dl, test_dl, valid_dl 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

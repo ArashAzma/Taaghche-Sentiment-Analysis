@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from app.model.main import predict_pipeline
-from app.model.model import __version__ as model_version
+from app.model.main import __version__ as model_version
 
 app = FastAPI()
 
@@ -10,7 +10,7 @@ class TextIn(BaseModel):
     text: str
 
 class PredictionOut(BaseModel):
-    language: str
+    rating: str
 
 @app.get("/")
 def home():
