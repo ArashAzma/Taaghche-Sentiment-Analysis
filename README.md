@@ -1,7 +1,7 @@
 # Taaghche-Sentiment-Analysis
 
 This project implements a sentiment analysis model for Persian book reviews using PyTorch and the HuggingFace Transformers library. The model is trained on a dataset of book reviews from Taghche, a Persian e-book platform.
-I added implemented a 🐋 dockerfile for building a image.
+The repository includes a FastAPI prediction endpoint, a web interface, and a Dockerfile.
 
 ![alt text](image.png)
 
@@ -37,6 +37,10 @@ I used the **HooshvareLab/bert-base-parsbert-uncased** tokenizer from Hugging Fa
 
 You can install the required packages using pip:
 
+```bash
+pip install -r requirements.txt
+```
+
 ## Dataset
 
 The dataset used in this project is a CSV file named 'taghche.csv', containing Persian book reviews. Each review includes the following information:
@@ -56,7 +60,12 @@ The dataset used in this project is a CSV file named 'taghche.csv', containing P
 | 69827 | 1398/09/29 | کتابی فوق العاده زیبا و عالی                                                                                                                                                                                                    | موش‌ها و آدم‌ها      |    5 |  59646 |    0 |
 | 69828 | 1398/07/24 | یکی از بهترین و تلخ ترین رمان های عمرم!واقعا درداور و درعین حال بی نظیر بود.البته من صوتیشو گوش دادم.شاید داستان ادم هایی باشه که کودک درونشون رو با دستای خودشون می کشن...                                                     | موش‌ها و آدم‌ها      |    5 |  59646 |    4 |
 
-The dataset is preprocessed and balanced to ensure an equal distribution of positive and negative sentiments.
+Reviews are preprocessed and deduplicated by their cleaned text before splitting.
+Ratings of 3 or above are labeled positive; ratings below 3 are labeled negative.
+The split uses a fixed seed (42) and stratifies by sentiment, holding out 10,000
+reviews each for validation and testing. Only the training partition is resampled
+to balance positive and negative examples. Validation and test reviews retain their
+original class distribution, and resampled copies cannot cross split boundaries.
 
 ## Preprocessing
 
@@ -101,9 +110,39 @@ The model is trained using:
 - Batch size of 256
 - Training for 100 epochs (or until convergence)
 
+Run training from the repository root:
+
+```bash
+python -m app.model.train --epochs 100 --seed 42
+```
+
+Each run starts from scratch. After validation, the scheduler receives that epoch's
+validation loss. The checkpoint with the lowest validation loss is saved to
+`app/model/model_taghche-0.2.0.pth` and evaluated once on the held-out test set.
+Use `--batch-size` or `--output` to override the defaults. Training data is loaded
+only by the training entry point, so importing the model for inference does not
+preprocess or split the review dataset.
+
+The existing API still uses the legacy `0.1.0` checkpoint. It is preserved for
+the demo and is not a checkpoint trained with the corrected split.
+
+Run the regression checks from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+These checks cover split overlap, reproducibility, inference imports, metric
+aggregation, and the validation and checkpoint order in a small training run.
+
 ## Results
 
-The final model achieves a test accuracy of **86.74%** on the held-out test set.
+The earlier implementation reported **86.74%** test accuracy, but it resampled
+reviews before splitting them. Copies of a review could therefore appear in both
+training and evaluation data. That score is historical and should not be treated
+as a leakage-free test result. A replacement accuracy will be reported after
+retraining from scratch with the corrected split; no corrected score is claimed
+yet.
 
 ## Usage
 
@@ -149,7 +188,7 @@ print(f"Predicted sentiment: {sentiment}")
 First, clone the repository if you haven’t done so:
 
 ```bash
-git clone https://github.com/your-username/Taaghche-Sentiment-Analysis.git
+git clone https://github.com/ArashAzma/Taaghche-Sentiment-Analysis.git
 cd Taaghche-Sentiment-Analysis
 ```
 To build the Docker image, run:
